@@ -14,7 +14,8 @@ app.set("view engine", "ejs");
 
 // Function to fetch news for a specific category
 const fetchNews = async (category) => {
-  const url = `https://api.thenewsapi.com/v1/news/top?api_token=VGcwZlA2CmY2uXyAiCTE0JZ2RhLjtMtRPVSo6r2U&locale=us&limit=3&categories=${category}`;
+    const url = `https://api.thenewsapi.com/v1/news/top?api_token=${process.env.NEWS_API_TOKEN}&locale=in&limit=3&categories=${category}`;
+
   try {
     const { data } = await axios.get(url);
 
@@ -46,6 +47,22 @@ app.get("/", async (req, res) => {
   res.render("index", { newsData });
 });
 
+// Route to fetch news dynamically
+app.get("/fetch-news", async (req, res) => {
+    const category = req.query.category; // Read category from the query string
+    if (!category) {
+      return res.status(400).json({ error: "Category is required" });
+    }
+  
+    try {
+      const articles = await fetchNews(category);
+      res.json({ success: true, articles });
+      console.log(articles);
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+  
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
