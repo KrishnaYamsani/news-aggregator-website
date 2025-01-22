@@ -14,7 +14,7 @@ app.set("view engine", "ejs");
 
 // Function to fetch news for a specific category
 const fetchNews = async (category) => {
-    const url = `https://api.thenewsapi.com/v1/news/top?api_token=${process.env.NEWS_API_TOKEN}&locale=in&limit=3&categories=${category}`;
+    const url = `https://api.thenewsapi.com/v1/news/top?api_token=${process.env.NEWS_API_TOKEN}&locale=in&limit=6&categories=${category}`;
 
   try {
     const { data } = await axios.get(url);
@@ -57,7 +57,6 @@ app.get("/fetch-news", async (req, res) => {
     try {
       const articles = await fetchNews(category);
       res.json({ success: true, articles });
-      console.log(articles);
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
